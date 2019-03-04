@@ -47,6 +47,7 @@ function allParams = setParams
     
     % Size of the checkerboard
     allParams.boardSize = [4 5];
+    allParams.cb_spacing = 4; % Real world grid spacing, in mm
 
     % List of images and csvs in directory
     allParams.imgList = dir([allParams.calImageDir 'GridCalibration_*.png']);
