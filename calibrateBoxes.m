@@ -61,9 +61,9 @@ function calibrateBoxes
         if strcmp(allDates,'Y')
             curDate = csv_dateList{iDate};
         else
-            
+            curDate = find(strcmp(csv_dateList,splitDates{iDate}));
         end
-
+%% STOPPED ADDING USER INPUT THINGS HERE
         fprintf('working on %s\n',curDate);
         
         % Begin processing for curDate
