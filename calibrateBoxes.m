@@ -33,12 +33,36 @@ function calibrateBoxes
     % FIJI, containing all marked checkerboard points)
     [imFiles_from_same_date, img_dateList] = groupByDate(allParams.imgList);
     [csvFiles_from_same_date, csv_dateList] = groupByDate(allParams.csvList);
-    numDates = length(csv_dateList);
+    
+    validResponse = 0;
+    while ~validResponse
+        allDates = input('Do you want to analyze all dates? Y/N: ', 's');
+        if strcmp(allDates,'Y')
+            validResponse = 1;
+            numDates = length(csv_dateList);
+            disp('if')
+        elseif strcmp(allDates,'N')
+            validResponse = 1;
+            wantDates = input('Enter the dates you want to analyze: ','s');
+            if contains(wantDates,', ')
+                splitDates = split(wantDates, ', ');
+            else
+                splitDates = split(wantDates, ',');
+            end
+            numDates=length(splitDates);
+        else
+            fprintf('\nPlease enter a valid response: Y for yes or N for no.\n\n');    
+        end
+    end
 
 %
     for iDate = 1 : numDates
 
-        curDate = csv_dateList{iDate};
+        if strcmp(allDates,'Y')
+            curDate = csv_dateList{iDate};
+        else
+            
+        end
 
         fprintf('working on %s\n',curDate);
         
@@ -165,9 +189,7 @@ function calibrateBoxes
             end
         end
 
-%         matSaveFileName = [allParams.calImageDir 'GridCalibration_' csv_dateList{iDate} '_all.mat'];
         imFileList = imFiles_from_same_date{img_date_idx};
-%         save(matSaveFileName, 'directChecks','mirrorChecks','allMatchedPoints','cameraParams','imFileList','curDate');
 
         if allParams.saveMarkedImages
             for iImg = 1 : numImgPerDate
@@ -202,13 +224,7 @@ function calibrateBoxes
                 
             end       
         end
-%     end
-%     
-%     all_pt_matList = dir([allParams.calImageDir 'Grid*_all.mat']);
-%     
-%     for iMat = 1 : length(all_pt_matList)
-    
-%         load([allParams.calImageDir all_pt_matList(iMat).name]);
+
         fprintf('working on %s\n',curDate);
        
         num_img = size(directChecks, 4);
@@ -276,13 +292,13 @@ function calibrateBoxes
                 scaleFactor(iBoard,iImg) = allParams.cb_spacing / mean(gs);
 
                 % comment in below to make scatter plots of world points
-    %             figure(iImg + 3)
-    %             if iBoard == 1
-    %                 hold off
-    %             else
-    %                 hold on
-    %             end
-    %             scatter3(wpts(:,1),wpts(:,2),wpts(:,3))
+                figure(iImg + 3)
+                if iBoard == 1
+                    hold off
+                else
+                    hold on
+                end
+                scatter3(wpts(:,1),wpts(:,2),wpts(:,3))
             end
 
         end
