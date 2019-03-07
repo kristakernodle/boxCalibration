@@ -80,7 +80,6 @@ for iMat = 1 : length(matList)
         f=figure('visible','off');
         imshow(img);
         saveas(f,[plotDateDir 'pointConfirm_' date '_' figNum],'fig');
-        saveas(f,[plotDateDir 'pointConfirm_' date '_' figNum],'png');
         close(f);
     end
     
@@ -98,10 +97,11 @@ for iMat = 1 : length(matList)
             
             % Plots points for the point confirmation plots.
             f=openfig([plotDateDir 'pointConfirm_' date '_' figNum],'invisible');
-            hold on;
-            scatter(curDirectChecks(1,1),curDirectChecks(1,2));
-            scatter(curMirrorChecks(1,1),curMirrorChecks(1,2));
+            hold all;
+            scatter(curDirectChecks(1,1),curDirectChecks(1,2),'filled');
+            scatter(curMirrorChecks(1,1),curMirrorChecks(1,2),'filled');
             saveas(f,[plotDateDir 'pointConfirm_' date '_' figNum],'fig');
+            saveas(f,[plotDateDir 'pointConfirm_' date '_' figNum],'png');
             close(f);
             
             
