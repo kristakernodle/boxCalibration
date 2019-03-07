@@ -18,9 +18,11 @@ To install this toolbox, simply download the repository and add it to your MatLa
 1. In MATLAB, run the ‘calibrateBoxes’ script. Several prompts which require responses will appear in the MATLAB command window. The first prompt asks if you want to analyze all images in your folder. 
   1. Typing ‘Y’ will end the prompts and all images for all dates will be analyzed. 
   1. Typing ‘N’ will then prompt you to enter the dates that you want to analyze. These dates should be of the form YYYYMMDD. If multiple dates will be analyzed, separate each date with a comma (e.g., 20190101, 20190102). Note: If the same date is analyzed twice, all files will be overwritten. 
-  1. Two new directories will be created in your calibration images folder following the execution of this script: ‘markedImages’ contains .png files with the user defined checkerboard marks on the calibration image. The ‘boxCalibration’ folder contains the .mat box calibration parameters for each date. 
-1. In MATLAB, run the ‘checkBoxCalibration’ script. The same prompts present in the ‘calibrateBoxes’ function will appear. This will create a new folder, ‘checkCalibration’ in the ‘boxCalibration’ folder. Each date will have a subfolder containing the images and several MATLAB .fig files, which should be viewed in order to verify that box calibration was completed accurately. 
-1. For further details, please see our script and function documentation: <link>
+  1. Two new directories will be created in your calibration images folder following the execution of this script: ‘markedImages’ contains .png files with the user defined checkerboard marks on the calibration image. The ‘boxCalibration’ folder contains the .mat box calibration parameters for each date. Below is an example of what a marked image looks like.
+![gridcalibration_20170813_1_marked](https://user-images.githubusercontent.com/31772548/53971683-5596dd80-40cb-11e9-817a-d5799f675713.png)
+1. In MATLAB, run the ‘checkBoxCalibration’ script. The same prompts present in the ‘calibrateBoxes’ function will appear. This will create a new folder, ‘checkCalibration’ in the ‘boxCalibration’ folder. Each date will have a subfolder containing the images and several MATLAB .fig files, which should be viewed in order to verify that box calibration was completed accurately. Example of calibration check:
+![calibConfirm_20170813_1](https://user-images.githubusercontent.com/31772548/53971709-66475380-40cb-11e9-99c2-c286c4041201.png)
+1. For further details, please see our [script and function documentation]().
 
 ### Code Contributors:
-Daniel Leventhal, Krista Kernodle.
+[Daniel Leventhal](https://github.com/dleventh), [Krista Kernodle](https://github.com/kristakernodle).
