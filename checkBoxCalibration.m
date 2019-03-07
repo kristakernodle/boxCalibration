@@ -133,7 +133,7 @@ for iMat = 1 : length(matList)
             ylabel('y')
             zlabel('z')
             set(gca,'zdir','reverse','ydir','reverse')
-            title(['boxCalibration ' date ', image ' iImg]);
+            title(['boxCalibration ' date ', image ' figNum]);
             view(15,45)
             
             saveas(h_fig,[plotDateDir 'calibConfirm_' date '_' figNum],'fig');
