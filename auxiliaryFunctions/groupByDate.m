@@ -12,7 +12,11 @@ function [sameDateFiles,dateList] = groupByDate(fileList)
 %       sameDateFiles   something
 %       dateList    something
 %
-% IDENTIFIER FOR OUR CUSTOM LAB CODE
+% boxCalibration package for MatLab
+
+% By Daniel K Leventhal, 2019
+% dleventh@med.umich.edu
+% https://github.com/orgs/LeventhalLab/boxCalibration
     
     dateList = cell(1);
     sameDateFiles={};

@@ -331,7 +331,6 @@ for iDate = 1 : numDates
                 close(f);
             end
             figNum=num2str(iImg);
-            disp([plotDateDir 'WorldPts_' curDate '_' iImg])
             f = figure('visible','off');
             hold on
             scatter3(all_wpts{iImg,1}(:,1),all_wpts{iImg,1}(:,2),all_wpts{iImg,1}(:,3));
