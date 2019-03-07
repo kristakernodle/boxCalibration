@@ -1,10 +1,16 @@
 function allParams = setParams
 %setParams Used to set parameters for project.
+%
+% boxCalibration package for MatLab
+
+% By Daniel K Leventhal, 2019
+% dleventh@med.umich.edu
+% https://github.com/orgs/LeventhalLab/boxCalibration
     
     % Calibration images directory (images should be .png): 
-    allParams.calImageDir = '/home/kkrista/Documents/Publications/JOVE_Winter2019/CalCubeImages/';
+    allParams.calImageDir = '/Users/Krista/Desktop/CalCubeImages/';
     % Camera parameters file directory (should be .mat file):
-    allParams.camParamFile = '/home/kkrista/Documents/Publications/JOVE_Winter2019/CalCubeImages/cameraParameters.mat';
+    allParams.camParamFile = '/Users/Krista/Desktop/CalCubeImages/cameraParameters.mat';
 
     % Plotting Parameters:
     allParams.saveMarkedImages = true;
@@ -12,6 +18,9 @@ function allParams = setParams
     allParams.colorList = {'red','green','blue'};
     allParams.markOpacity = 1;
 
+    % Plot Creation:
+    allParams.makeWorldPts_fig = true;
+    
     % Parameters for detecting borders around checkerboards:
     allParams.threshStepSize = 0.01;
     allParams.diffThresh = 0.1;
