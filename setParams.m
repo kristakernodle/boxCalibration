@@ -58,7 +58,7 @@ function allParams = setParams
     allParams.boardSize = [4 5];
     allParams.cb_spacing = 4; % Real world grid spacing, in mm
 
-    % List of images and csvs in directory
+    % List of images and csvs in directory; this should not need to be changed
     allParams.imgList = dir([allParams.calImageDir 'GridCalibration_*.png']);
     allParams.csvList = dir([allParams.calImageDir 'GridCalibration_*.csv']);
     
