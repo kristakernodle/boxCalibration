@@ -8,9 +8,9 @@ function allParams = setParams
 % https://github.com/orgs/LeventhalLab/boxCalibration
     
     % Calibration images directory (images should be .png): 
-    allParams.calImageDir = '/Users/Krista/Desktop/CalCubeImages/';
+    allParams.calImageDir = '/home/kkrista/Documents/Publications/JOVE_Winter2019/CalCubeImages/';
     % Camera parameters file directory (should be .mat file):
-    allParams.camParamFile = '/Users/Krista/Desktop/CalCubeImages/cameraParameters.mat';
+    allParams.camParamFile = '/home/kkrista/Documents/Publications/JOVE_Winter2019/CalCubeImages/cameraParameters.mat';
 
     % Plotting Parameters:
     allParams.saveMarkedImages = true;

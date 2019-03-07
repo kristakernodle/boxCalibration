@@ -223,7 +223,7 @@ for iDate = 1 : numDates
                 curChecks = squeeze(directChecks(:,:,iBoard,iImg));
                 for i_pt = 1 : size(curChecks,1)
                     if isnan(curChecks(i_pt,1)); continue; end
-                    newImg = insertShape(newImg,'circle',...
+                    newImg = insertShape(newImg,'FilledCircle',...
                         [curChecks(i_pt,1),curChecks(i_pt,2),allParams.markRadius],...
                         'color',allParams.colorList{iBoard},'opacity',allParams.markOpacity);
                 end
@@ -231,14 +231,14 @@ for iDate = 1 : numDates
                 curChecks = squeeze(mirrorChecks(:,:,iBoard,iImg));
                 for i_pt = 1 : size(curChecks,1)
                     if isnan(curChecks(i_pt,1)); continue; end
-                    newImg = insertShape(newImg,'circle',...
+                    newImg = insertShape(newImg,'FilledCircle',...
                         [curChecks(i_pt,1),curChecks(i_pt,2),allParams.markRadius],...
                         'color',allParams.colorList{iBoard},'opacity',allParams.markOpacity);
                 end
 
             end
 
-            newImgName = strrep(curImgName,'.png','_all_marked.png');
+            newImgName = strrep(curImgName,'.png','_marked.png');
             imwrite(newImg,[markedDir newImgName],'png');
 
         end       
