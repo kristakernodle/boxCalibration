@@ -23,7 +23,7 @@ To install this toolbox, simply download the repository and add it to your MatLa
 1. In MATLAB, run the ‘checkBoxCalibration’ script. The same prompts present in the ‘calibrateBoxes’ script will appear. This will create a new folder, ‘plots’ in the calibration images folder. Each date will have a subfolder containing the images and several MATLAB .fig files, which should be viewed in order to verify that box calibration was completed accurately. Note: Differently colored dots in the calibConfirm_YYYYMMDD_#.png files represent the matched dots in the pointConfirm_YYYYMMDD_#.png files. Example of calibration check:
 ![pointCOnfirm_20170813_1](https://user-images.githubusercontent.com/31772548/53971711-66475380-40cb-11e9-9717-e52cea5cf356.png)
 ![calibConfirm_20170813_1](https://user-images.githubusercontent.com/31772548/53977754-bcba8f00-40d7-11e9-9ada-45c5704c98c2.png)
-1. For further details, please see our [script and function documentation]().
+1. For further details, please see our [script and function documentation](https://github.com/LeventhalLab/boxCalibration/wiki/Script-and-Function-Details).
 
 ### Code Contributors:
 [Daniel Leventhal](https://github.com/dleventh), [Krista Kernodle](https://github.com/kristakernodle).
