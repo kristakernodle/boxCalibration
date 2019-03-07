@@ -8,9 +8,9 @@ function allParams = setParams
 % https://github.com/orgs/LeventhalLab/boxCalibration
     
     % Calibration images directory (images should be .png): 
-    allParams.calImageDir = '/home/kkrista/Documents/Publications/JOVE_Winter2019/CalCubeImages/';
+    allParams.calImageDir = '~/Desktop/';
     % Camera parameters file directory (should be .mat file):
-    allParams.camParamFile = '/home/kkrista/Documents/Publications/JOVE_Winter2019/CalCubeImages/cameraParameters.mat';
+    allParams.camParamFile = '~/Desktop/';
 
     % Plotting Parameters:
     allParams.saveMarkedImages = true;
@@ -36,6 +36,10 @@ function allParams = setParams
     allParams.minSolidity = 0.8;
     allParams.SEsize = 3;
 
+    % Size of the checkerboard
+    allParams.boardSize = [4 5];
+    allParams.cb_spacing = 4; % Real world grid spacing, in mm
+
     % Regions of interest containing the checkerboards
     allParams.ROIs = [700,270,650,705;
             750,1,600,325;
@@ -53,10 +57,6 @@ function allParams = setParams
     allParams.mirror_hsvThresh = [0,0.1,0.85,1,0.85,1; % red
                         0.30,0.05,0.85,1,0.85,1; % green
                         0.60,0.1,0.85,1,0.85,1]; % blue
-    
-    % Size of the checkerboard
-    allParams.boardSize = [4 5];
-    allParams.cb_spacing = 4; % Real world grid spacing, in mm
 
     % List of images and csvs in directory; this should not need to be changed
     allParams.imgList = dir([allParams.calImageDir 'GridCalibration_*.png']);
