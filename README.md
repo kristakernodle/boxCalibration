@@ -5,7 +5,7 @@ boxCalibration is a toolbox for creating reconstruction parameters, used in comb
 ![gridcalibration_20170813_1](https://user-images.githubusercontent.com/31772548/53970604-17002380-40c9-11e9-8e74-df32723ff412.png)
 
 ### Installation
-To install this toolbox, simply download the repository and add it to your MatLab pathway. This software was developed on MatLab R2018b. Several MatLab toolboxes will also be required:
+To install this toolbox, simply download the repository and add it to your MatLab pathway. This software was developed on MatLab R2018b and has been tested on R2017b. Several MatLab toolboxes will also be required:
 - Optimization Toolbox
 - Computer Vision System Toolbox
 - Image Processing Toolbox
