@@ -24,7 +24,8 @@ function [new_directChecks, new_mirrorChecks] = assign_csv_points_to_checkerboar
 num_newPoints = size(newPoints, 1);
 numDirectBoards = size(directBorderMask,3);   % this is one binary array instead of the cell structure that holds one array for each different image
 new_directChecks = NaN(prod(anticipatedBoardSize-1), 2, numDirectBoards);
-numMirrorBoards = size(mirrorBorderMask,3);
+% numMirrorBoards = size(mirrorBorderMask,3);
+numMirrorBoards = 2;
 new_mirrorChecks = NaN(prod(anticipatedBoardSize-1), 2, numMirrorBoards);
 
 if isempty(newPoints)

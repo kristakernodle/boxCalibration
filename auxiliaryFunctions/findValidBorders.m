@@ -82,24 +82,9 @@ while ~foundValidBorder && currentThresh < maxThresh
         numIterations = numIterations + 1;
         continue;
         
-        % what if we have multiple potential borders and only one of them
-        % is the right one?
-        for iObj = 1 : max(L(:))
-            regionstats = regionprops(L == iObj,'euler');
-            if regionstats.EulerNumber == 0   % a candidate border - there is one hole
-                mirrorBorder_filled = imfill(L == iObj,'holes');
-                testImg = mirrorBorder_filled & ~(L == iObj);   % where the checkerboard should be
-                teststats = regionprops(testImg,'area');
-                A = teststats.Area;
-
-                if A > minCheckerboardArea && A < maxCheckerboardArea
-                    foundValidBorder = true;
-                    borderMask = (L == iObj);
-                    break;
-                end
-            end
-        end
     end
+    
+    
     
     % what if we have the right border but there are multiple holes in
     % it?

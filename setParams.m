@@ -8,14 +8,14 @@ function allParams = setParams
 % https://github.com/orgs/LeventhalLab/boxCalibration
     
     % Calibration images directory (images should be .png): 
-    allParams.calImageDir = '~/Desktop/';
+    allParams.calImageDir = '/home/kkrista/Documents/SkilledReaching/CalCube_imgs/';
     % Camera parameters file directory (should be .mat file):
-    allParams.camParamFile = '~/Desktop/';
+    allParams.camParamFile = '/home/kkrista/Documents/SkilledReaching/cameraParameters_box1.mat';
 
     % Plotting Parameters:
     allParams.saveMarkedImages = true;
     allParams.markRadius = 5;
-    allParams.colorList = {'red','green','blue'};
+    allParams.colorList = {'green','blue'};
     allParams.markOpacity = 1;
 
     % Plot Creation:
@@ -41,22 +41,17 @@ function allParams = setParams
     allParams.cb_spacing = 4; % Real world grid spacing, in mm
 
     % Regions of interest containing the checkerboards
-    allParams.ROIs = [700,270,650,705;
-            750,1,600,325;
-            1,400,350,500;
-            1700,400,340,500];
+    allParams.ROIs = [800, 200, 530, 790;
+            310, 200, 457, 739;
+            1319, 200, 393, 740];
 
     % Orientation of mirrors
-    allParams.mirrorOrientation = {'top','left','right'};
+    allParams.mirrorOrientation = {'left','right'};
     
     % Color thresholds for checkerboards (HSV)
-    allParams.direct_hsvThresh = [0,0.1,0.9,1,0.9,1; % red
-                        0.33,0.1,0.9,1,0.9,1; % green
-                        0.66,0.1,0.9,1,0.9,1]; % blue
+    allParams.direct_hsvThresh = [0.33,0.1,0.9,1,0.9,1; 0.518,0.240,0.425,1,1,1]; % green; blue
 
-    allParams.mirror_hsvThresh = [0,0.1,0.85,1,0.85,1; % red
-                        0.30,0.05,0.85,1,0.85,1; % green
-                        0.60,0.1,0.85,1,0.85,1]; % blue
+    allParams.mirror_hsvThresh = [0.3,0.05,0.79,1,0.85,1; 0.62,0.218,0.296,1,1,1]; % green; blue
 
     % List of images and csvs in directory; this should not need to be changed
     allParams.imgList = dir([allParams.calImageDir 'GridCalibration_*.png']);

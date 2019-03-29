@@ -16,16 +16,19 @@ function [ imgMask, denoisedMasks ] = findDirectBorders( img, HSVlimits, ROIs, v
 % dleventh@med.umich.edu
 % https://github.com/orgs/LeventhalLab/boxCalibration
 
-threshStepSize = 0.01;
-diffThresh = 0.1;
-maxThresh = 0.2;
+% allParams=setParams;
+% 
+% threshStepSize = allParams.threshStepSize;
+% diffThresh = allParams.diffThresh;
+% maxThresh = allParams.maxThresh;
+% 
+% minCheckerboardArea = allParams.minCheckerboardArea;
+% maxCheckerboardArea = allParams.maxCheckerboardArea;
+%     
+% maxDistFromMainBlob = allParams.maxDistFromMainBlob;    
+% minSolidity = allParams.minSolidity;
+% SEsize = allParams.SEsize;
 
-minCheckerboardArea = 5000;
-maxCheckerboardArea = 25000;
-    
-maxDistFromMainBlob = 200;    
-minSolidity = 0.8;
-SEsize = 3;
 for iarg = 1 : 2 : nargin - 3
     switch lower(varargin{iarg})
         case 'diffthresh'
@@ -183,40 +186,41 @@ for iImg = 1 : num_img
         for ii = 1 : numColors
             otherBorderMask = otherBorderMask | imgMask{iImg}(:,:,ii);
         end
-        if ~foundValidBorder(1)
-            % extend ROI up at from other borders if the
-            % top (red) checkerboard wasn't found
-            extendMaskUp = 150;
-        else
-            extendMaskUp = 0;
-        end
-        if foundValidBorder(1) && ~(foundValidBorder(2) || foundValidBorder(3))
-            extendMaskDown = 250;
-        else
-            extendMaskDown = 0;
-        end
-        if foundValidBorder(2) && ~foundValidBorder(3)
+        
+%         if ~foundValidBorder(1)
+%             % extend ROI up at from other borders if the
+%             % top (red) checkerboard wasn't found
+%             extendMaskUp = 150;
+%         else
+%             extendMaskUp = 0;
+%         end
+%         if foundValidBorder(1) && ~(foundValidBorder(2))
+%             extendMaskDown = 250;
+%         else
+%             extendMaskDown = 0;
+%         end
+        if foundValidBorder(1) && ~foundValidBorder(2)
             extendMaskRight = 250;
             extendMaskLeft = 0;
         end
-        if ~foundValidBorder(2) && foundValidBorder(3)
+        if ~foundValidBorder(1) && foundValidBorder(2)
             extendMaskLeft = 250;
             extendMaskRight = 0;
         end
-        if ~foundValidBorder(2) && ~foundValidBorder(3)
+        if ~foundValidBorder(1) && ~foundValidBorder(2)
             extendMaskLeft = 50;
             extendMaskRight = 50;
         end
-        if foundValidBorder(2) && foundValidBorder(3)
+        if foundValidBorder(1) && foundValidBorder(2)
             extendMaskLeft = 0;
             extendMaskRight = 0;
         end
         s = regionprops(bwconvhull(otherBorderMask,'union'),'boundingbox');
         bBox = round(s.BoundingBox);
         bBox(1) = bBox(1) - extendMaskLeft;
-        bBox(2) = bBox(2) - extendMaskUp;
+        bBox(2) = bBox(2) - 0;
         bBox(3) = bBox(3) + extendMaskLeft + extendMaskRight;
-        bBox(4) = bBox(4) + extendMaskUp + extendMaskDown;
+        bBox(4) = bBox(4) + 0;
         
         cropped_img = img{iImg}(bBox(2):bBox(2) + bBox(4),...
                                 bBox(1):bBox(1) + bBox(3),:);

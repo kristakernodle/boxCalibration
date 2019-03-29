@@ -9,10 +9,11 @@
 % dleventh@med.umich.edu
 % https://github.com/orgs/LeventhalLab/boxCalibration
 
-% Extract and define necessary variables from setParams function
+%% Extract and define necessary variables from setParams function
 allParams=setParams;
 load(allParams.camParamFile);
-K = cameraParams.IntrinsicMatrix;
+cameraParams=cameraParams_box1;
+K = cameraParams_box1.IntrinsicMatrix;
 
 points_per_board = prod(allParams.boardSize-1);
 
@@ -62,7 +63,8 @@ while ~validResponse
     end
 end
 
-% Begin processing for selected dates
+
+%% Begin processing for selected dates
 for iDate = 1 : numDates
 
     % Adjust variables for selected dates
@@ -74,7 +76,7 @@ for iDate = 1 : numDates
 
     fprintf('working on %s\n',curDate);
 
-    % Begin processing for curDate
+%% Begin processing for curDate
 
     for csvFiles_all=1:length(csvFiles_from_same_date)
         logical=contains(csvFiles_from_same_date{csvFiles_all},curDate);
@@ -93,7 +95,7 @@ for iDate = 1 : numDates
     csvData = cell(1,num_csvPerDate);
     csvNumList = zeros(1,num_csvPerDate);
 
-    % Read in csv data and undistort the points
+    %% Read in csv data and undistort the points
     for i_csv = 1 : num_csvPerDate
         cur_csvName = csvFiles_from_same_date{csv_date_idx}{i_csv};
         C = textscan(cur_csvName,['GridCalibration_' curDate '_%d.csv']);
@@ -103,7 +105,7 @@ for iDate = 1 : numDates
         csvData{i_csv}=undistortPoints(csvData{i_csv},cameraParams); 
     end
 
-    % Load marked images (i.e., has .csv file)
+    %% Load marked images (i.e., has .csv file)
     imgNumList = zeros(1,numImgPerDate);
     numImgLoaded = 0;
     if exist('img','var')
@@ -121,7 +123,7 @@ for iDate = 1 : numDates
         end
     end
 
-    % Create boarder masks
+    %% Create boarder masks
     [directBorderMask, ~] = findDirectBorders(img, allParams.direct_hsvThresh, allParams.ROIs, ...
             'diffthresh', allParams.diffThresh, 'threshstepsize', allParams.threshStepSize, 'maxthresh', allParams.maxThresh, ...
             'maxdistfrommainblob', allParams.maxDistFromMainBlob, 'mincheckerboardarea', allParams.minDirectCheckerboardArea, ...
@@ -130,8 +132,15 @@ for iDate = 1 : numDates
             'diffthresh', allParams.diffThresh, 'threshstepsize', allParams.threshStepSize, 'maxthresh', allParams.maxThresh, ...
             'maxdistfrommainblob', allParams.maxDistFromMainBlob, 'mincheckerboardarea', allParams.minMirrorCheckerboardArea, ...
             'maxcheckerboardarea', allParams.maxMirrorCheckerboardArea, 'sesize', allParams.SEsize, 'minsolidity', allParams.minSolidity);
-
-    % Undistort boarder masks
+    dbm1=directBorderMask{1};
+    mbm1=mirrorBorderMask{1};
+%     figure;
+%     imshow(dbm1(:,:,2));
+    figure;
+    imshow(mbm1(:,:,2));
+        
+        
+    %% Undistort boarder masks
     for ii = 1 : length(directBorderMask)
         for jj = 1 : size(directBorderMask{ii},3)
             directBorderMask{ii}(:,:,jj) = undistortImage(squeeze(directBorderMask{ii}(:,:,jj)), cameraParams);
@@ -147,7 +156,7 @@ for iDate = 1 : numDates
     directChecks = NaN(prod(allParams.boardSize-1),2,size(directBorderMask{1},3),numImgPerDate);
     mirrorChecks = NaN(prod(allParams.boardSize-1),2,size(mirrorBorderMask{1},3),numImgPerDate);
 
-    % Assign points in csv to checkerboards
+    %% Assign points in csv to checkerboards
     for i_csv = 1 : num_csvPerDate
 
         % figure out what image index to use
@@ -180,7 +189,7 @@ for iDate = 1 : numDates
 
     end
 
-    % Identify matching points for direct and mirror views
+    %% Identify matching points for direct and mirror views
     allMatchedPoints = NaN(points_per_board * numImgPerDate, 2, 2, numBoards);
     for iImg = 1 : numImgPerDate
         for iBoard = 1 : numBoards
@@ -209,7 +218,7 @@ for iDate = 1 : numDates
 
     imFileList = imFiles_from_same_date{img_date_idx};
 
-    % Save marked images
+    %% Save marked images
     if allParams.saveMarkedImages
         for iImg = 1 : numImgPerDate
 
@@ -250,7 +259,7 @@ for iDate = 1 : numDates
     Pn = NaN(4,3,numBoards);
     scaleFactor = NaN(numBoards, num_img);
 
-    % Create reconstruction variables for date
+    %% Create reconstruction variables for date
     for iBoard = 1 : size(allMatchedPoints, 4)
         mp_direct = squeeze(allMatchedPoints(:,:,1,iBoard));
         mp_mirror = squeeze(allMatchedPoints(:,:,2,iBoard));
@@ -313,7 +322,7 @@ for iDate = 1 : numDates
 
     end
 
-    % Plot world points figures (scatter plots)
+    %% Plot world points figures (scatter plots)
     if allParams.makeWorldPts_fig
 
         plotDir = [allParams.calImageDir 'plots/'];
@@ -341,7 +350,7 @@ for iDate = 1 : numDates
         end
     end
 
-    % write box calibration information to disk
+    %% write box calibration information to disk
     calibrationFileName = [boxCalDir 'boxCalibration_' curDate '.mat'];
     save(calibrationFileName,'P','Pn','F','E','scaleFactor','directChecks','mirrorChecks','allMatchedPoints','cameraParams','curDate','imFileList');
 

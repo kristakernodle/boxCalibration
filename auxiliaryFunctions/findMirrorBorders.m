@@ -8,16 +8,16 @@ function [ imgMask, denoisedMasks ] = findMirrorBorders(img, HSVlimits, ROIs, va
 % dleventh@med.umich.edu
 % https://github.com/orgs/LeventhalLab/boxCalibration
 
-diffThresh = 0.1;
-threshStepSize = 0.01;
-maxThresh = 0.2;
-maxDistFromMainBlob = 200;
-
-minCheckerboardArea = 5000;
-maxCheckerboardArea = 20000;
-minSolidity = 0.8;
-    
-SEsize = 3;
+% diffThresh = 0.1;
+% threshStepSize = 0.01;
+% maxThresh = 0.2;
+% maxDistFromMainBlob = 200;
+% 
+% minCheckerboardArea = 5000;
+% maxCheckerboardArea = 20000;
+% minSolidity = 0.8;
+%     
+% SEsize = 3;
 
 for iarg = 1 : 2 : nargin - 3
     switch lower(varargin{iarg})
