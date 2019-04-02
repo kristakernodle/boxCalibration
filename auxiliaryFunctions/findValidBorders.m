@@ -8,18 +8,6 @@ function [borderMask,denoisedMask,foundValidBorder] = findValidBorders(img_hsv, 
 % dleventh@med.umich.edu
 % https://github.com/orgs/LeventhalLab/boxCalibration
 
-diffThresh = 0.1;
-threshStepSize = 0.01;
-maxThresh = 0.2;
-maxDistFromMainBlob = 200;
-
-minCheckerboardArea = 5000;
-maxCheckerboardArea = 25000;
-
-minSolidity = 0.8;
-    
-SEsize = 3;
-
 for iarg = 1 : 2 : nargin - 3
     switch lower(varargin{iarg})
         case 'diffthresh'
@@ -40,6 +28,7 @@ for iarg = 1 : 2 : nargin - 3
             minSolidity = varargin{iarg + 1};
     end
 end
+
 SE = strel('disk',SEsize);
 
 view_hsv = img_hsv .* repmat(double(viewMask),1,1,3);
@@ -61,6 +50,7 @@ hsvDist_gray = mean(hsvDist(:,:,1:2),3);
 currentThresh = diffThresh;
 numIterations = 0;
 foundValidBorder = false;
+
 while ~foundValidBorder && currentThresh < maxThresh
     if numIterations == 0
         borderMask = denoisedMask;

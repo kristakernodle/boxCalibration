@@ -34,7 +34,7 @@ function allParams = setParams
 
     allParams.maxDistFromMainBlob = 200;  
     allParams.minSolidity = 0.8;
-    allParams.SEsize = 3;
+    allParams.SEsize = 2;
 
     % Size of the checkerboard
     allParams.boardSize = [4 5];
@@ -49,9 +49,9 @@ function allParams = setParams
     allParams.mirrorOrientation = {'left','right'};
     
     % Color thresholds for checkerboards (HSV)
-    allParams.direct_hsvThresh = [0.33,0.1,0.9,1,0.9,1; 0.518,0.240,0.425,1,1,1]; % green; blue
+    allParams.direct_hsvThresh = [0.33,0.1,0.9,1,0.9,1; 0.518,0.240,0.425,1,1,0.99]; % green; blue
 
-    allParams.mirror_hsvThresh = [0.3,0.05,0.79,1,0.85,1; 0.62,0.218,0.296,1,1,1]; % green; blue
+    allParams.mirror_hsvThresh = [0.3,0.05,0.79,1,0.85,1; 0.62,0.218,0.296,1,1,0.99]; % green; blue
 
     % List of images and csvs in directory; this should not need to be changed
     allParams.imgList = dir([allParams.calImageDir 'GridCalibration_*.png']);

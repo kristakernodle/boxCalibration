@@ -1,14 +1,3 @@
-% calibrateBoxes 
-%
-% Generates parameters for 3D reconstruction. All necessary variables are
-% defined in the 'setParams' function. 
-%
-% boxCalibration package for MatLab
-
-% By Daniel K Leventhal, 2019
-% dleventh@med.umich.edu
-% https://github.com/orgs/LeventhalLab/boxCalibration
-
 %% Extract and define necessary variables from setParams function
 allParams=setParams;
 load(allParams.camParamFile);
@@ -63,7 +52,6 @@ while ~validResponse
     end
 end
 
-
 %% Begin processing for selected dates
 for iDate = 1 : numDates
 
@@ -75,9 +63,7 @@ for iDate = 1 : numDates
     end
 
     fprintf('working on %s\n',curDate);
-
-%% Begin processing for curDate
-
+    
     for csvFiles_all=1:length(csvFiles_from_same_date)
         logical=contains(csvFiles_from_same_date{csvFiles_all},curDate);
         if logical(1)==1
@@ -101,6 +87,7 @@ for iDate = 1 : numDates
         C = textscan(cur_csvName,['GridCalibration_' curDate '_%d.csv']);
         csvNumList(i_csv) = C{1};
         csvData{i_csv} = readFIJI_csv([allParams.calImageDir cur_csvName]);
+        
         % Undistort points in csv file
         csvData{i_csv}=undistortPoints(csvData{i_csv},cameraParams); 
     end
@@ -111,6 +98,7 @@ for iDate = 1 : numDates
     if exist('img','var')
         clear img
     end
+    
     for iImg = 1 : numImgPerDate
         curImgName = imFiles_from_same_date{img_date_idx}{iImg};
         C = textscan(curImgName,['GridCalibration_' curDate '_%d.png']);
@@ -122,126 +110,43 @@ for iDate = 1 : numDates
             imgNumList(numImgLoaded) = imageNumber;
         end
     end
-
-    %% Create border masks
-    [directBorderMask, ~] = findDirectBorders(img, allParams.direct_hsvThresh, allParams.ROIs, ...
-            'diffthresh', allParams.diffThresh, 'threshstepsize', allParams.threshStepSize, 'maxthresh', allParams.maxThresh, ...
-            'maxdistfrommainblob', allParams.maxDistFromMainBlob, 'mincheckerboardarea', allParams.minDirectCheckerboardArea, ...
-            'maxcheckerboardarea', allParams.maxDirectCheckerboardArea, 'sesize', allParams.SEsize, 'minsolidity', allParams.minSolidity);
-    [mirrorBorderMask, ~] = findMirrorBorders(img, allParams.mirror_hsvThresh, allParams.ROIs, ...
-            'diffthresh', allParams.diffThresh, 'threshstepsize', allParams.threshStepSize, 'maxthresh', allParams.maxThresh, ...
-            'maxdistfrommainblob', allParams.maxDistFromMainBlob, 'mincheckerboardarea', allParams.minMirrorCheckerboardArea, ...
-            'maxcheckerboardarea', allParams.maxMirrorCheckerboardArea, 'sesize', allParams.SEsize, 'minsolidity', allParams.minSolidity);
     
-    if isempty(find(directBorderMask{1}(:,:,2),1))
-        for imNum=1:length(img)
-            disp(['image ' imNum ': Direct Border - External Border'])
-            blue_extBorder=roipoly(img{imNum});
-            close all;
-            disp(['image ' imNum ': Direct Border - Internal Border'])
-            blue_intBorder=roipoly(img{imNum});
-            close all;
-            
-            blueBorder=blue_extBorder-blue_intBorder;
-            directBorderMask{imNum}(:,:,2)=blueBorder;
-            
-        end
-    end
-    if isempty(find(mirrorBorderMask{1}(:,:,2),1))
-        for imNum=1:length(img)
-            disp(['image ' imNum ': Mirror Border - External Border'])
-            blue_extBorder=roipoly(img{imNum});
-            close all;
-            disp(['image ' imNum ': Mirror Border - Internal Border'])
-            blue_intBorder=roipoly(img{imNum});
-            close all;
-            
-            blueBorder=blue_extBorder-blue_intBorder;
-            mirrorBorderMask{imNum}(:,:,2)=blueBorder;
-        end
-    end
-        
-        
-        
-    %% Undistort border masks
-    for ii = 1 : length(directBorderMask)
-        for jj = 1 : size(directBorderMask{ii},3)
-            directBorderMask{ii}(:,:,jj) = undistortImage(squeeze(directBorderMask{ii}(:,:,jj)), cameraParams);
-        end
-    end
-    for ii = 1 : length(mirrorBorderMask)
-        for jj = 1 : size(mirrorBorderMask{ii},3)
-            mirrorBorderMask{ii}(:,:,jj) = undistortImage(squeeze(mirrorBorderMask{ii}(:,:,jj)), cameraParams);
-        end
-    end
-
+    %% Identify boards and associated points
+    
     % Create arrays to hold the marked checkerboard points
-    directChecks = NaN(prod(allParams.boardSize-1),2,size(directBorderMask{1},3),numImgPerDate);
-    mirrorChecks = NaN(prod(allParams.boardSize-1),2,size(mirrorBorderMask{1},3),numImgPerDate);
-
-    %% Assign points in csv to checkerboards
-    for i_csv = 1 : num_csvPerDate
-
-        % figure out what image index to use
-        img_idx = find(imgNumList == csvNumList(i_csv));
-
-        % fill out the directChecks and mirrorChecks arrays. Assume that
-        % the image number is the correct index to use.
-
-        [new_directChecks, new_mirrorChecks] = assign_csv_points_to_checkerboards(directBorderMask{img_idx}, ...
-                                                mirrorBorderMask{img_idx}, ...
-                                                allParams.ROIs, csvData{i_csv}, ...
-                                                allParams.boardSize, ...
-                                                allParams.mirrorOrientation);
-
-        % update directChecks and mirrorChecks arrays
-        for iBoard = 1 : size(new_directChecks,3)
-            testPoints = squeeze(new_directChecks(:,:,iBoard));
-            if ~all(isnan(testPoints(:)))
-                % marked points were found for this board
-                directChecks(:,:,iBoard,imgNumList(img_idx)) = testPoints;
-            end
-
-            testPoints = squeeze(new_mirrorChecks(:,:,iBoard));
-            if ~all(isnan(testPoints(:)))
-                % marked points were found for this board
-                mirrorChecks(:,:,iBoard,imgNumList(img_idx)) = testPoints;
-            end
-
-        end
-
-    end
-
-    %% Identify matching points for direct and mirror views
+    directChecks = NaN(prod(allParams.boardSize-1),2,numBoards,numImgPerDate);
+    mirrorChecks = NaN(prod(allParams.boardSize-1),2,numBoards,numImgPerDate);
+    
     allMatchedPoints = NaN(points_per_board * numImgPerDate, 2, 2, numBoards);
-    for iImg = 1 : numImgPerDate
-        for iBoard = 1 : numBoards
-            curDirectChecks = squeeze(directChecks(:,:,iBoard,iImg));
-            curMirrorChecks = squeeze(mirrorChecks(:,:,iBoard,iImg));
-
-            if all(isnan(curDirectChecks(:))) || all(isnan(curMirrorChecks(:)))
-                % don't have matching points for the direct and mirror view
-                continue;
-            end
-
-            matchIdx = matchCheckerboardPoints(curDirectChecks, curMirrorChecks);
-
+    
+    for imNum=1:length(img)
+        for iBoard=1:numBoards
+        
+            [direct_points,mirror_points]=findBoardPoints(imNum,iBoard,...
+                                                            img{imNum},...
+                                                            csvData{imNum},...
+                                                            allParams.mirrorOrientation,...
+                                                            cameraParams);
+                                                        
+            matchIdx=matchCheckerboardPoints(direct_points,mirror_points);
+            
             matchStartIdx = (iImg-1) * points_per_board + 1;
             matchEndIdx = (iImg) * points_per_board;
 
-            allMatchedPoints(matchStartIdx:matchEndIdx,:,1,iBoard) = curDirectChecks(matchIdx(:,1),:);
-            allMatchedPoints(matchStartIdx:matchEndIdx,:,2,iBoard) = curMirrorChecks(matchIdx(:,2),:);
+            allMatchedPoints(matchStartIdx:matchEndIdx,:,1,iBoard) = direct_points(matchIdx(:,1),:);
+            allMatchedPoints(matchStartIdx:matchEndIdx,:,2,iBoard) = mirror_points(matchIdx(:,2),:);
 
-            directChecks(:,:,iBoard,iImg) = curDirectChecks(matchIdx(:,1),:);
-            mirrorChecks(:,:,iBoard,iImg) = curMirrorChecks(matchIdx(:,2),:);
-
-
+            directChecks(:,:,iBoard,iImg) = direct_points(matchIdx(:,1),:);
+            mirrorChecks(:,:,iBoard,iImg) = mirror_points(matchIdx(:,2),:);
+            directChecks(:,:,iBoard,imNum)=direct_points(matchIdx(:,1),:);
+            mirrorChecks(:,:,iBoard,imNum)=mirror_points(matchIdx(:,2),:);
+                                                        
         end
     end
-
+    
     imFileList = imFiles_from_same_date{img_date_idx};
-
-    %% Save marked images
+    
+    % Save marked images
     if allParams.saveMarkedImages
         for iImg = 1 : numImgPerDate
 
@@ -275,14 +180,14 @@ for iDate = 1 : numDates
 
         end       
     end
-
+    
     num_img = size(directChecks, 4);
     F = NaN(3,3,numBoards);
     E = NaN(3,3,numBoards);
     Pn = NaN(4,3,numBoards);
     scaleFactor = NaN(numBoards, num_img);
 
-    %% Create reconstruction variables for date
+    % Create reconstruction variables for date
     for iBoard = 1 : size(allMatchedPoints, 4)
         mp_direct = squeeze(allMatchedPoints(:,:,1,iBoard));
         mp_mirror = squeeze(allMatchedPoints(:,:,2,iBoard));
@@ -344,8 +249,8 @@ for iDate = 1 : numDates
         end
 
     end
-
-    %% Plot world points figures (scatter plots)
+    
+    % Plot world points figures (scatter plots)
     if allParams.makeWorldPts_fig
 
         plotDir = [allParams.calImageDir 'plots/'];
@@ -367,14 +272,12 @@ for iDate = 1 : numDates
             hold on
             scatter3(all_wpts{iImg,1}(:,1),all_wpts{iImg,1}(:,2),all_wpts{iImg,1}(:,3));
             scatter3(all_wpts{iImg,2}(:,1),all_wpts{iImg,2}(:,2),all_wpts{iImg,2}(:,3));
-            scatter3(all_wpts{iImg,3}(:,1),all_wpts{iImg,3}(:,2),all_wpts{iImg,3}(:,3));
             saveas(f,[plotDateDir 'WorldPts_' curDate '_' figNum],'fig');
             saveas(f,[plotDateDir 'WorldPts_' curDate '_' figNum],'png');
         end
     end
-
-    %% write box calibration information to disk
-    calibrationFileName = [boxCalDir 'boxCalibration_' curDate '.mat'];
+    
+    % write box calibration information to disk
+    calibrationFileName = [boxCalDir 'boxCalibration_box1_' curDate '.mat'];
     save(calibrationFileName,'P','Pn','F','E','scaleFactor','directChecks','mirrorChecks','allMatchedPoints','cameraParams','curDate','imFileList');
-
 end
